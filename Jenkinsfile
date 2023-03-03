@@ -4,6 +4,6 @@ node('PHPINFO') {
             branch: 'scripted'    
     }
     stage('Install') {
-        sh 'mvn clean package'
+        sh './mvnw package'
     }
 }
