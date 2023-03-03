@@ -4,7 +4,7 @@ pipeline {
         stage('git clone') {
             steps {
                 git url: 'https://github.com/Shoaib-23/spring-petclinic.git',
-                    branch: declarative
+                    branch: 'declarative'
             }
         }   
         stage('build') {
