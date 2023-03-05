@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'PHPINFO' }
+    agent { label 'JENKINS-NODE' }
     stages {
         stage('git clone') {
             steps {
