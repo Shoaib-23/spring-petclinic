@@ -15,12 +15,12 @@ pipeline {
                 jdk 'JDK_17_UBUNTU'
             }
             steps {
-                sh './mvnw package'
+                sh './gradlew build'
             }
         }
         stage('post build') {
             steps {
-                archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0.jar',
+                archiveArtifacts artifacts: '**/build/libs/spring-petclinic-3.0.0.jar',
                                  onlyIfSuccessful: true
                 junit testResults: '**/TEST-*.xml'
             }
