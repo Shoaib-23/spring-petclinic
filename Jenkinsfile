@@ -18,6 +18,13 @@ pipeline {
                 sh "./gradlew ${params.GRADLE_GOAL}"
             }
         }
+        stage('sonar analysis') {
+            steps {
+                withSonarQubeEnv() { // Will pick the global server connection you have configured
+                    sh './gradlew sonarqube'
+                }
+            }
+        }
         stage('post build') {
             steps {
                 archiveArtifacts artifacts: '**/build/libs/spring-petclinic-3.0.0.jar',
