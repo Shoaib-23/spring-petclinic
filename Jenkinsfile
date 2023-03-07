@@ -1,6 +1,6 @@
 pipeline {
     agent { label 'JENKINS-NODE' }
-    triggers { pollSCM ('') }
+    triggers { pollSCM ('* * * * *') }
     parameters {
         choice(name: 'GRADLE_GOAL', choices: ['build', 'install', 'clean'], description: 'Gradle Goal') }
     stages {
@@ -20,7 +20,7 @@ pipeline {
         }
         stage('sonar analysis') {
             steps {
-                withSonarQubeEnv() { // Will pick the global server connection you have configured
+                withSonarQubeEnv('SONAR_CLOUD') { // Will pick the global server connection you have configured
                     sh './gradlew sonarqube'
                 }
             }
