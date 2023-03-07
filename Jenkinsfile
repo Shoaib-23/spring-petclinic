@@ -15,7 +15,7 @@ pipeline {
                 jdk 'JDK_17_UBUNTU'
             }
             steps {
-                sh './gradlew build'
+                sh "mvn ${params.MAVEN_GOAL}"
             }
         }
         stage('post build') {
