@@ -14,15 +14,17 @@ pipeline {
         }
     }
     post {
-        failure {
-            emailext body: "The build failed. Please check the logs for details.",
-                     subject: "Build Failed: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
-                     to: "shoaib.shoaib23@gmail.com"
-        }
         success {
-            emailext body: "The build succeeded. Please check the artifact for details.",
-                     subject: "Build Succeeded: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
-                     to: "shoaib.shoaib23@gmail.com"
+            mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is success",
+                body: "Use this URL ${BUILD_URL} for more info",
+                to: 'shoaib.shoaib23@gmail.com',
+                from: 'devops@qt.com'
+        }
+        failure {
+            mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is failed",
+                body: "Use this URL ${BUILD_URL} for more info",
+                to: "${GIT_AUTHOR_EMAIL}",
+                from: 'devops@qt.com'
         }
     }
 }
