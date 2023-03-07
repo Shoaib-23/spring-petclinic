@@ -15,12 +15,12 @@ pipeline {
                 jdk 'JDK_17_UBUNTU'
             }
             steps {
-                sh "mvn ${params.MAVEN_GOAL}"
+                sh "./mvnw ${params.MAVEN_GOAL}"
             }
         }
         stage('post build') {
             steps {
-                archiveArtifacts artifacts: '**/build/libs/spring-petclinic-3.0.0.jar',
+                archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0.jar',
                                  onlyIfSuccessful: true
                 junit testResults: '**/TEST-*.xml'
             }
