@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'JENKINS-NODE' }
+    triggers { pollSCM ('* * * * *') }
+    parameters {
+        choice(name: 'MAVEN_GOAL', choices: ['package', 'install', 'clean'], description: 'Maven Goal') }
     stages {
         stage('git clone') {
             steps {
@@ -9,7 +12,14 @@ pipeline {
         }   
         stage('build') {
             steps {
-                sh './gradlew build'
+                sh './mvnw build'
+            }
+        }
+        stage('post build') {
+            steps {
+                archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0.jar',
+                                 onlyIfSuccessful: true
+                junit testResults: '**/TEST-*.xml'
             }
         }
     }
