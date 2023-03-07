@@ -11,6 +11,9 @@ pipeline {
             }
         }   
         stage('build') {
+            tools {
+                jdk 'JDK_17_UBUNTU'
+            }
             steps {
                 sh './mvnw package'
             }
