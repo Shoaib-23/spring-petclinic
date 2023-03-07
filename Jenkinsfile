@@ -1,6 +1,6 @@
 pipeline {
     agent { label 'JENKINS-NODE' }
-    triggers { pollSCM ('* * * * *') }
+    triggers { pollSCM ('') }
     parameters {
         choice(name: 'GRADLE_GOAL', choices: ['build', 'install', 'clean'], description: 'Gradle Goal') }
     stages {
