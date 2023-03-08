@@ -2,7 +2,7 @@ pipeline {
     agent { label 'JENKINS-NODE' }
     triggers { pollSCM ('* * * * *') }
     parameters {
-        choice(name: 'GRADLE_GOAL', choices: ['build', 'install', 'clean'], description: 'Gradle Goal') }
+        choice(name: 'MAVEN_GOAL', choices: ['package', 'install', 'clean'], description: 'Maven Goal') }
     stages {
         stage('git clone') {
             steps {
@@ -15,19 +15,19 @@ pipeline {
                 jdk 'JDK_17_UBUNTU'
             }
             steps {
-                sh "./gradlew ${params.GRADLE_GOAL}"
+                sh "./mvnw ${params.GRADLE_GOAL}"
             }
         }
         stage('sonar analysis') {
             steps {
                 withSonarQubeEnv('SONAR_CLOUD') { // Will pick the global server connection you have configured
-                    sh 'gradle clean build -Dsonar.organization=spring-petclinic23'
+                    sh 'mvn clean package sonar:sonar -Dsonar.organization=springpetclinic23'
                 }
             }
         }
         stage('post build') {
             steps {
-                archiveArtifacts artifacts: '**/build/libs/spring-petclinic-3.0.0.jar',
+                archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0-SNAPSHOT.jar',
                                  onlyIfSuccessful: true
                 junit testResults: '**/TEST-*.xml'
             }
