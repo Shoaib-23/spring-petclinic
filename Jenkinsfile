@@ -21,7 +21,7 @@ pipeline {
         stage('sonar analysis') {
             steps {
                 withSonarQubeEnv('SONAR_CLOUD') { // Will pick the global server connection you have configured
-                    sh './gradlew sonarqube'
+                    sh 'gradle clean build -Dsonar.organization=spring-petclinic23'
                 }
             }
         }
