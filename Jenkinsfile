@@ -21,7 +21,7 @@ pipeline {
         stage('sonar analysis') {
             steps {
                 withSonarQubeEnv('SONAR_CLOUD') { // Will pick the global server connection you have configured
-                    sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic23_spring -Dsonar.organization=spring-petclinic23'
+                    sh './mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic23_spring -Dsonar.organization=spring-petclinic23'
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0-SNAPSHOT.jar',
                                  onlyIfSuccessful: true
-                junit testResults: '**/TEST-*.xml'
+                junit testResults: '**/surefire-reports/TEST-*.xml'
             }
         }
     }
