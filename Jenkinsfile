@@ -21,7 +21,7 @@ pipeline {
         stage('sonar analysis') {
             steps {
                 withSonarQubeEnv('SONAR_CLOUD') { // Will pick the global server connection you have configured
-                    sh 'mvn clean package sonar:sonar -Dsonar.organization=springpetclinic23'
+                    sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic23_spring -Dsonar.organization=spring-petclinic23'
                 }
             }
         }
