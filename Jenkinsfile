@@ -15,7 +15,7 @@ pipeline {
                 jdk 'JDK_17_UBUNTU'
             }
             steps {
-                sh "./mvnw ${params.GRADLE_GOAL}"
+                sh "./mvnw ${params.MAVEN_GOAL}"
             }
         }
         stage('sonar analysis') {
