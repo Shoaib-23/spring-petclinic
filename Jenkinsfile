@@ -8,80 +8,53 @@ pipeline {
             steps {
                 git url: 'https://github.com/Shoaib-23/spring-petclinic.git',
                     branch: 'declarative'
-            }
-            post {
-                always {
-                    mail subject: "Cloning from Github with id ${BUILD_ID} is started",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                success {
-                    mail subject: "Cloning from Github with id ${BUILD_ID} is success",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                failure {
-                    mail subject: "Cloning from Github with id ${BUILD_ID} is failed",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
             }        
         }   
-        stage('build') {
+        stage ('Artifactory configuration') {
+            steps {
+                rtServer (
+                    id: "ARTIFACTORY_SERVER",
+                    url: 'https://shoaib23.jfrog.io/artifactory',
+                    credentialsId: 'JFROG'
+                )
+
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "ARTIFACTORY_SERVER",
+                    releaseRepo: 'libs-release',
+                    snapshotRepo: 'libs-snapshot'
+                )
+
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
+                    serverId: "ARTIFACTORY_SERVER",
+                    releaseRepo: 'libs-release',
+                    snapshotRepo: 'libs-snapshot'
+                )
+            }
+        }
+        stage('package') {
             tools {
                 jdk 'JDK_17_UBUNTU'
             }
             steps {
-                sh "./mvnw ${params.MAVEN_GOAL}"
+                rtMavenRun (
+                    tool: 'MAVEN-3.6.3',
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: "MAVEN_DEPLOYER"
+                    
+                )
+                rtPublishBuildInfo (
+                    serverId: "ARTIFACTORY_SERVER"
+                )
+                //sh "mvn ${params.MAVEN_GOAL}"
             }
-            post {
-                always {
-                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is started",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                success {
-                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is success",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                failure {
-                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is failed",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-            } 
         }
         stage('sonar analysis') {
             steps {
                 withSonarQubeEnv('SONAR_CLOUD') { // Will pick the global server connection you have configured
                     sh './mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic23_spring -Dsonar.organization=spring-petclinic23'
-                }
-            }
-            post {
-                always {
-                    mail subject: "Sonar Analysis of ${JOB_NAME} with id ${BUILD_ID} is started",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                success {
-                    mail subject: "Sonar Analysis of ${JOB_NAME} with id ${BUILD_ID} is success",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                failure {
-                    mail subject: "Sonar Analysis of ${JOB_NAME} with id ${BUILD_ID} is failed",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
                 }
             }
         }
@@ -90,26 +63,6 @@ pipeline {
                 archiveArtifacts artifacts: '**/target/spring-petclinic-3.0.0-SNAPSHOT.jar',
                                  onlyIfSuccessful: true
                 junit testResults: '**/surefire-reports/TEST-*.xml'
-            }
-            post {
-                always {
-                    mail subject: "Artifact of ${JOB_NAME} with id ${BUILD_ID} is started",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                success {
-                    mail subject: "Artifact of ${JOB_NAME} with id ${BUILD_ID} is success",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
-                failure {
-                    mail subject: "Artifact of ${JOB_NAME} with id ${BUILD_ID} is failed",
-                        body: "Use this URL ${BUILD_URL} for more info",
-                        to: 'shoaib.shoaib23@gmail.com',
-                        from: 'devops@qt.com'
-                }
             }
         }
     }
