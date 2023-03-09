@@ -113,4 +113,18 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            mail subject: "Every stage in the pipeline is running successful",
+                body: "Use this URL ${BUILD_URL} for more info",
+                to: 'shoaib.shoaib23@gmail.com',
+                from: 'devops@qt.com'
+        }
+        failure {
+            mail subject: "Some of the stage in the pipeline is failing",
+                body: "Use this URL ${BUILD_URL} for more info",
+                to: 'shoaib.shoaib23@gmail.com',
+                from: 'devops@qt.com'
+        }
+    }
 } 
