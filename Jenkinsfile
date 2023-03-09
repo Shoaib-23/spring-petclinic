@@ -11,19 +11,19 @@ pipeline {
             }
             post {
                 always {
-                    mail subject: "Cloning from Github is started",
+                    mail subject: "Cloning from Github with id ${BUILD_ID} is started",
                         body: "Use this URL ${BUILD_URL} for more info",
                         to: 'shoaib.shoaib23@gmail.com',
                         from: 'devops@qt.com'
                 }
                 success {
-                    mail subject: "Cloning from Github is success",
+                    mail subject: "Cloning from Github with id ${BUILD_ID} is success",
                         body: "Use this URL ${BUILD_URL} for more info",
                         to: 'shoaib.shoaib23@gmail.com',
                         from: 'devops@qt.com'
                 }
                 failure {
-                    mail subject: "Cloning from Github is failed",
+                    mail subject: "Cloning from Github with id ${BUILD_ID} is failed",
                         body: "Use this URL ${BUILD_URL} for more info",
                         to: 'shoaib.shoaib23@gmail.com',
                         from: 'devops@qt.com'
@@ -115,7 +115,7 @@ pipeline {
     }
     post {
         success {
-            mail subject: "Every stage in the pipeline is running successful",
+            mail subject: "Every stage in the pipeline is running successfully",
                 body: "Use this URL ${BUILD_URL} for more info",
                 to: 'shoaib.shoaib23@gmail.com',
                 from: 'devops@qt.com'
