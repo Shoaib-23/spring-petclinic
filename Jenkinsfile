@@ -9,6 +9,26 @@ pipeline {
                 git url: 'https://github.com/Shoaib-23/spring-petclinic.git',
                     branch: 'declarative'
             }
+            post {
+                always {
+                    mail subject: "Cloning from Github is started",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                success {
+                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is success",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                failure {
+                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is failed",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+            }        
         }   
         stage('build') {
             tools {
@@ -53,4 +73,4 @@ pipeline {
                 from: 'devops@qt.com'
         }
     }
-}
+} 
