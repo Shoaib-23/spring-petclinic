@@ -17,13 +17,13 @@ pipeline {
                         from: 'devops@qt.com'
                 }
                 success {
-                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is success",
+                    mail subject: "Cloning from Github is success",
                         body: "Use this URL ${BUILD_URL} for more info",
                         to: 'shoaib.shoaib23@gmail.com',
                         from: 'devops@qt.com'
                 }
                 failure {
-                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is failed",
+                    mail subject: "Cloning from Github is failed",
                         body: "Use this URL ${BUILD_URL} for more info",
                         to: 'shoaib.shoaib23@gmail.com',
                         from: 'devops@qt.com'
@@ -37,11 +37,51 @@ pipeline {
             steps {
                 sh "./mvnw ${params.MAVEN_GOAL}"
             }
+            post {
+                always {
+                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is started",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                success {
+                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is success",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                failure {
+                    mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is failed",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+            } 
         }
         stage('sonar analysis') {
             steps {
                 withSonarQubeEnv('SONAR_CLOUD') { // Will pick the global server connection you have configured
                     sh './mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic23_spring -Dsonar.organization=spring-petclinic23'
+                }
+            }
+            post {
+                always {
+                    mail subject: "Sonar Analysis of ${JOB_NAME} with id ${BUILD_ID} is started",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                success {
+                    mail subject: "Sonar Analysis of ${JOB_NAME} with id ${BUILD_ID} is success",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                failure {
+                    mail subject: "Sonar Analysis of ${JOB_NAME} with id ${BUILD_ID} is failed",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
                 }
             }
         }
@@ -51,26 +91,26 @@ pipeline {
                                  onlyIfSuccessful: true
                 junit testResults: '**/surefire-reports/TEST-*.xml'
             }
-        }
-    }
-    post {
-        always {
-            mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is started",
-                body: "Use this URL ${BUILD_URL} for more info",
-                to: 'shoaib.shoaib23@gmail.com',
-                from: 'devops@qt.com'
-        }
-        success {
-            mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is success",
-                body: "Use this URL ${BUILD_URL} for more info",
-                to: 'shoaib.shoaib23@gmail.com',
-                from: 'devops@qt.com'
-        }
-        failure {
-            mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is failed",
-                body: "Use this URL ${BUILD_URL} for more info",
-                to: 'shoaib.shoaib23@gmail.com',
-                from: 'devops@qt.com'
+            post {
+                always {
+                    mail subject: "Artifact of ${JOB_NAME} with id ${BUILD_ID} is started",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                success {
+                    mail subject: "Artifact of ${JOB_NAME} with id ${BUILD_ID} is success",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+                failure {
+                    mail subject: "Artifact of ${JOB_NAME} with id ${BUILD_ID} is failed",
+                        body: "Use this URL ${BUILD_URL} for more info",
+                        to: 'shoaib.shoaib23@gmail.com',
+                        from: 'devops@qt.com'
+                }
+            }
         }
     }
 } 
