@@ -6,14 +6,6 @@ pipeline {
     stages {
         stage('git clone') {
             steps {
-                post {
-                    always {
-                        mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is start cloning",
-                             body: "Use this URL ${BUILD_URL} for more info",
-                             to: 'shoaib.shoaib23@gmail.com',
-                             from: 'devops@qt.com'
-                    }
-                }
                 git url: 'https://github.com/Shoaib-23/spring-petclinic.git',
                     branch: 'declarative'
             }
@@ -42,6 +34,12 @@ pipeline {
         }
     }
     post {
+        always {
+            mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is started",
+                body: "Use this URL ${BUILD_URL} for more info",
+                to: 'shoaib.shoaib23@gmail.com',
+                from: 'devops@qt.com'
+        }
         success {
             mail subject: "Jenkins Build of ${JOB_NAME} with id ${BUILD_ID} is success",
                 body: "Use this URL ${BUILD_URL} for more info",
