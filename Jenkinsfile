@@ -35,13 +35,13 @@ pipeline {
         }
         stage('package') {
             tools {
-                jdk 'JDK_17_UBUNTU'
+                jdk 'JDK-17'
             }
             steps {
                 rtMavenRun (
                     tool: 'MAVEN',
                     pom: 'pom.xml',
-                    goals: 'clean build',
+                    goals: 'clean install',
                     deployerId: "MAVEN_DEPLOYER"
                     
                 )
@@ -80,4 +80,4 @@ pipeline {
                 from: 'devops@qt.com'
         }
     }
-} 
+}
